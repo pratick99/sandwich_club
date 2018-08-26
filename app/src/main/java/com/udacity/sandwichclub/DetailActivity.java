@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -14,6 +15,10 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
+    TextView descriptionText;
+    TextView originText;
+    TextView ingredientsTextViewList;
+    TextView alsoKnownAsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +26,20 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
+        descriptionText = findViewById(R.id.description_tv);
+        originText = findViewById(R.id.origin_tv);
+        ingredientsTextViewList = findViewById(R.id.ingredients_tv);
+        alsoKnownAsText = findViewById(R.id.also_known_tv);
 
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }
 
-        int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
+        int position = 0;
+        if (intent != null) {
+            position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
+        }
         if (position == DEFAULT_POSITION) {
             // EXTRA_POSITION not found in intent
             closeOnError();
@@ -43,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -56,7 +68,31 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(final Sandwich sandwich) {
+        descriptionText.setText(sandwich.getDescription());
+        originText.setText(sandwich.getPlaceOfOrigin());
+        StringBuilder ingredientsSb = new StringBuilder();
+        for(int i = 0; i < sandwich.getIngredients().size(); i++) {
+            if(i == 0) {
+                String each = sandwich.getIngredients().get(i);
+                ingredientsSb.append(each);
+            }
+
+            String leftOvers = ", "+sandwich.getIngredients().get(i);
+            ingredientsSb.append(leftOvers);
+        }
+        ingredientsTextViewList.setText(ingredientsSb.toString());
+        StringBuilder alsoKnownAsSb = new StringBuilder();
+        for(int i = 0; i < sandwich.getAlsoKnownAs().size(); i++) {
+            if(i == 0) {
+                String each = sandwich.getAlsoKnownAs().get(i);
+                alsoKnownAsSb.append(each);
+            }
+
+            String leftOvers = ", "+ sandwich.getAlsoKnownAs().get(i);
+            alsoKnownAsSb.append(leftOvers);
+        }
+        alsoKnownAsText.setText(alsoKnownAsSb.toString());
 
     }
 }
