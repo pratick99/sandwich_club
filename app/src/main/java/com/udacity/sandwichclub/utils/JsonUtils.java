@@ -25,14 +25,14 @@ public class JsonUtils {
             JSONObject nameOfSandwich = new JSONObject(name);
             String mainName = nameOfSandwich.getString("mainName");
             JSONArray jsonArray = nameOfSandwich.getJSONArray("alsoKnownAs");
-            JSONArray ingrediantsArray = jsonObject.getJSONArray("ingredients");
+            JSONArray ingredientsArray = jsonObject.getJSONArray("ingredients");
             sandwich.setMainName(mainName);
             for(int i = 0; i < jsonArray.length(); i++) {
                 differentNames.add(jsonArray.getString(i));
             }
 
-            for(int i = 0; i < ingrediantsArray.length(); i++) {
-                ingredients.add(ingrediantsArray.getString(i));
+            for(int i = 0; i < ingredientsArray.length(); i++) {
+                ingredients.add(ingredientsArray.getString(i));
             }
             sandwich.setAlsoKnownAs(differentNames);
             sandwich.setDescription(jsonObject.getString("description"));
